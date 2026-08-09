@@ -1,0 +1,24 @@
+import { PageShell } from "../site-shell";
+
+export default function Story(){return <PageShell accent="#79ae3d">
+  <section className="story-page-hero">
+    <div className="story-hero-copy"><p className="eyebrow">Our story · Coastal Karnataka</p><h1>Fresh beginnings.<br/>Bigger ambitions.<br/><span>From the roots of Mangalore.</span></h1><p>Fresh Kind brings the energy, colour and tropical spirit of the coast into a growing family of refreshing fruit beverages.</p><div><a className="button" href="/our-juices">Explore our juices ↗</a><a className="story-text-link" href="#journey">Discover our journey ↓</a></div></div>
+    <div className="story-hero-art"><img src="/assets/mangalore-story.png" alt="Fresh Kind bottles riding through Mangalore"/></div>
+  </section>
+
+  <section className="story-intro reveal-section" id="journey"><div><p className="eyebrow">Where it began</p><h2>A local spirit with room to travel.</h2></div><div><p className="story-lead">Fresh Kind began with a simple ambition: create colourful fruit beverages people enjoy and build a dependable portfolio for retailers and partners.</p><p>Rooted in the vibrant food culture of coastal Karnataka, the range continues to grow with familiar fruits, tropical flavours and an unmistakable shelf presence.</p></div></section>
+
+  <section className="story-journey">
+    <article className="journey-card journey-large reveal-section"><span>01</span><div><p className="eyebrow">The idea</p><h3>Refreshment inspired by the coast.</h3><p>Warm weather, bold fruit and everyday moments shaped a beverage range made to feel lively, familiar and fresh.</p></div><img src="/assets/pineapple-full.png" alt="Fresh Kind pineapple juice"/></article>
+    <article className="journey-card journey-photo reveal-section"><img src="/assets/just-fruit-in-a-bottle.png" alt="Fresh fruit preparation"/><div><span>02</span><h3>Fruit-led product experiences.</h3></div></article>
+    <article className="journey-card journey-green reveal-section"><span>03</span><p className="eyebrow">The ambition</p><h3>From Mangalore to more markets.</h3><p>A growing portfolio creates more choice for consumers and more opportunity for distribution partners.</p><a href="/partnership">Grow with Fresh Kind ↗</a></article>
+  </section>
+
+  <section className="story-values reveal-section"><div className="story-values-heading"><p className="eyebrow">What we believe in</p><h2>Four ideas guide every next step.</h2></div><div className="story-values-grid">{[["01","Taste","Products should be enjoyable enough for consumers to choose again."],["02","Variety","A growing range creates more choice and more opportunity."],["03","Consistency","Reliable presentation and dependable relationships matter."],["04","Partnership","Strong brands grow through strong local business connections."]].map(x=><article key={x[0]}><span>{x[0]}</span><i></i><h3>{x[1]}</h3><p>{x[2]}</p></article>)}</div></section>
+
+  <section className="story-process reveal-section"><div className="process-sticky"><p className="eyebrow">The product journey</p><h2>From an idea<br/>to every bottle.</h2><p>A clear, thoughtful path connects flavour inspiration with stores and customers.</p></div><ol>{[["Ingredients","Fruit-led flavour ideas and selected ingredients establish the character of each drink."],["Preparation","Ingredients are carefully prepared to create the intended taste, colour and texture."],["Processing","The beverage moves through a controlled process designed for consistency across every batch."],["Filling","Prepared juice is filled into Fresh Kind bottles with attention to presentation and handling."],["Quality check","Products are reviewed for appearance, packaging integrity and consistent presentation."],["Packaging","Finished bottles are organised and packed so they are ready for storage and onward supply."],["Distribution","Products move to retailers and distribution partners, reaching more consumers and markets."]].map((x,i)=><li key={x[0]}><b>{String(i+1).padStart(2,"0")}</b><div><h3>{x[0]}</h3><p>{x[1]}</p></div></li>)}</ol></section>
+
+  <section className="mangalore-note reveal-section"><div><p className="eyebrow">Our home</p><h2>Made with coastal energy.</h2><p>Mangalore and the wider coastal region bring together tropical produce, entrepreneurial spirit and a culture that celebrates vibrant flavour.</p><div className="location-chip">Mangalore · Coastal Karnataka · India</div></div><img src="/assets/coastal-walk.png" alt="Fresh Kind bottles walking along the Mangalore coast"/></section>
+
+  <section className="page-cta"><p className="eyebrow">The journey continues</p><h2>Take Fresh Kind to your market.</h2><div><a className="button" href="/our-juices">Explore our juices ↗</a> <a className="button light" href="/partnership">Become a partner</a></div></section>
+</PageShell>}
