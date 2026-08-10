@@ -5,7 +5,14 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  }
 );
 
 type Product = {
@@ -20,6 +27,7 @@ type Product = {
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [authReady, setAuthReady] = useState(false);
   const [name, setName] = useState("");
   const [flavour, setFlavour] = useState("");
   const [size, setSize] = useState("");
@@ -29,8 +37,22 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+  async function checkAuth() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.href = "/admin";
+      return;
+    }
+
+    setAuthReady(true);
+    await loadProducts();
+  }
+
+  checkAuth();
+}, []);
 
   async function loadProducts() {
     const { data, error } = await supabase
