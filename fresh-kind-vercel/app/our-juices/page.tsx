@@ -1,46 +1,140 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import { PageShell } from "../site-shell";
 
-const items = [
-  { n: "Papaya Juice", f: "Papaya", i: "papaya-full.png", c: "#ee8b35", category: "Bottle", size: "250 ML" },
-  { n: "Guava Juice", f: "Pink Guava", i: "guava-full.png", c: "#75a93e", category: "Bottle", size: "250 ML" },
-  { n: "Litchi Juice", f: "Litchi", i: "litchi-full.png", c: "#df6f80", category: "Bottle", size: "250 ML" },
-  { n: "Chiku Juice", f: "Chiku", i: "chiku-full.png", c: "#b58a5b", category: "Bottle", size: "250 ML" },
-  { n: "Pineapple Juice", f: "Pineapple", i: "pineapple-full.png", c: "#e3ad20", category: "Bottle", size: "250 ML" },
-  { n: "Blueberry Boba", f: "Blueberry", i: "blueberry-full.png", c: "#7257a8", category: "Boba", size: "250 ML" },
-  { n: "Lemon Mojito Boba", f: "Lemon", i: "lemon-full.png", c: "#9dc538", category: "Boba", size: "250 ML" },
-  { n: "Tender Coconut Water", f: "Tender Coconut", i: "tender-coconut.png", c: "#8db532", category: "Tin", size: "330 ML" },
-];
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+);
+
+type Product = {
+  id: number;
+  name: string;
+  flavour: string | null;
+  size: string | null;
+  description: string | null;
+  image_url: string | null;
+  is_active: boolean;
+};
 
 export default function Juices() {
+  const [items, setItems] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
-  const [category, setCategory] = useState("All");
-  const list = useMemo(
-    () => items.filter((x) => (category === "All" || x.category === category) && (x.n + x.f).toLowerCase().includes(q.toLowerCase())),
-    [q, category],
-  );
 
-  return <PageShell accent="#f19a38">
-    <section className="catalog-hero">
-      <p className="eyebrow">The Fresh Kind family</p>
-      <h1>30+ products.<br />One Fresh Kind.</h1>
-      <p>Explore classic, tropical and speciality fruit beverages across our growing range.</p>
-      <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search juices..." aria-label="Search juices" />
-      <div className="catalog-filters" aria-label="Product categories">
-        {["All", "Bottle", "Boba", "Tin"].map((name) => <button key={name} className={category === name ? "active" : ""} onClick={() => setCategory(name)}>{name}</button>)}
-      </div>
-    </section>
-    <section className="catalog-grid">
-      {list.map((x) => <article key={x.n} style={{ "--accent": x.c } as React.CSSProperties}>
-        <div><img src={`/assets/${x.i}`} alt={x.n} /><i /></div>
-        <small>{x.category} · {x.f} · {x.size}</small>
-        <h2>{x.n}</h2>
-        <p>{x.category === "Tin" ? "Naturally hydrating coconut water with real tender coconut pulp and refreshing electrolytes." : "Refreshing fruit flavour in a convenient bottle. Shake well and enjoy fresh."}</p>
-        <a href={`https://wa.me/919741189488?text=${encodeURIComponent(`Hi Fresh Kind, I'm interested in ${x.n}.`)}`}>Enquire on WhatsApp ↗</a>
-      </article>)}
-    </section>
-    <section className="page-cta"><h2>Need the complete catalogue?</h2><a className="button" href="/contact">Request catalogue ↗</a></section>
-  </PageShell>;
+  useEffect(() => {
+    async function loadProducts() {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Product loading error:", error);
+        setLoading(false);
+        return;
+      }
+
+      setItems(data || []);
+      setLoading(false);
+    }
+
+    loadProducts();
+  }, []);
+
+  const list = useMemo(() => {
+    const search = q.toLowerCase().trim();
+
+    if (!search) return items;
+
+    return items.filter((product) => {
+      const name = product.name?.toLowerCase() || "";
+      const flavour = product.flavour?.toLowerCase() || "";
+
+      return name.includes(search) || flavour.includes(search);
+    });
+  }, [items, q]);
+
+  return (
+    <PageShell accent="#f19a38">
+      <section className="catalog-hero">
+        <p className="eyebrow">The Fresh Kind family</p>
+
+        <h1>
+          30+ products.
+          <br />
+          One Fresh Kind.
+        </h1>
+
+        <p>
+          Explore classic, tropical and speciality fruit beverages across our
+          growing range.
+        </p>
+
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search juices..."
+          aria-label="Search juices"
+        />
+      </section>
+
+      <section className="catalog-grid">
+        {loading && <p>Loading products...</p>}
+
+        {!loading && list.length === 0 && (
+          <p>No products found.</p>
+        )}
+
+        {!loading &&
+          list.map((product) => (
+            <article className="catalog-card" key={product.id}>
+              <div>
+                {product.image_url ? (
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    style={{
+                      width: "100%",
+                      height: "260px",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      height: "260px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "#f5f5f5",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    No image
+                  </div>
+                )}
+              </div>
+
+              <h3>{product.name}</h3>
+
+              {product.flavour && (
+                <p>{product.flavour}</p>
+              )}
+
+              {product.size && (
+                <p>{product.size}</p>
+              )}
+
+              {product.description && (
+                <p>{product.description}</p>
+              )}
+            </article>
+          ))}
+      </section>
+    </PageShell>
+  );
 }
