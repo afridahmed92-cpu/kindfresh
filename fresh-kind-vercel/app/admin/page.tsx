@@ -9,7 +9,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function AdminPage() {
-  const [email, setEmail] = useState("admin@fresh-kind.com");
+  const [email, setEmail] = useState("afridahamed110@gmail.com");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
