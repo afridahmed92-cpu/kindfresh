@@ -17,13 +17,13 @@ drop policy if exists "Public can read website content" on public.site_content;
 create policy "Public can read website content" on public.site_content for select using (true);
 drop policy if exists "Fresh Kind admin can add content" on public.site_content;
 create policy "Fresh Kind admin can add content" on public.site_content for insert to authenticated
-with check (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+with check (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can update content" on public.site_content;
 create policy "Fresh Kind admin can update content" on public.site_content for update to authenticated
-using (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com') with check (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com') with check (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can remove content" on public.site_content;
 create policy "Fresh Kind admin can remove content" on public.site_content for delete to authenticated
-using (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 
 insert into storage.buckets (id, name, public) values ('site-assets', 'site-assets', true)
 on conflict (id) do update set public = true;
@@ -31,13 +31,13 @@ drop policy if exists "Public can view Fresh Kind assets" on storage.objects;
 create policy "Public can view Fresh Kind assets" on storage.objects for select using (bucket_id = 'site-assets');
 drop policy if exists "Fresh Kind admin can upload assets" on storage.objects;
 create policy "Fresh Kind admin can upload assets" on storage.objects for insert to authenticated
-with check (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+with check (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can update assets" on storage.objects;
 create policy "Fresh Kind admin can update assets" on storage.objects for update to authenticated
-using (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can delete assets" on storage.objects;
 create policy "Fresh Kind admin can delete assets" on storage.objects for delete to authenticated
-using (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (bucket_id = 'site-assets' and lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 
 -- Products managed from /admin/products and displayed on /our-juices.
 create table if not exists public.products (
@@ -63,16 +63,16 @@ alter table public.products add column if not exists updated_at timestamptz not 
 
 alter table public.products enable row level security;
 drop policy if exists "Public can view active products" on public.products;
-create policy "Public can view active products" on public.products for select using (is_active = true or lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+create policy "Public can view active products" on public.products for select using (is_active = true or lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can add products" on public.products;
 create policy "Fresh Kind admin can add products" on public.products for insert to authenticated
-with check (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+with check (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can update products" on public.products;
 create policy "Fresh Kind admin can update products" on public.products for update to authenticated
-using (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com') with check (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com') with check (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 drop policy if exists "Fresh Kind admin can delete products" on public.products;
 create policy "Fresh Kind admin can delete products" on public.products for delete to authenticated
-using (lower(auth.jwt() ->> 'email') = 'admin@fresh-kind.com');
+using (lower(auth.jwt() ->> 'email') = 'afridahamed110@gmail.com');
 
 insert into public.products (name, slug, flavour, category, size, description, image_url, accent, position) values
 ('Papaya Juice','papaya-juice','Papaya','Bottle','250 ML','Refreshing fruit flavour in a convenient bottle. Shake well and enjoy fresh.','/assets/papaya-full.png','#ee8b35',10),
